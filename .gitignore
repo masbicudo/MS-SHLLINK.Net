@@ -1,0 +1,7 @@
+obj/
+bin/
+*.suo
+*.bak
+*.user
+bin-copy/
+publish/
