@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using ShellLink.Validators;
 
-namespace ShellLink
+namespace ShellLink.Validators
 {
     public static class LinkTargetIDListValidator
     {
-        const int TerminalID_Size = ItemId.SizeFieldLength;
+        const int TerminalID_Size = ItemID.SizeFieldLength;
 
         public static void Check(this LinkTargetIDList obj, List<Exception> errors)
         {

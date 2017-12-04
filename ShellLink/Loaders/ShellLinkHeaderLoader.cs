@@ -1,11 +1,14 @@
 using System.IO;
+using JetBrains.Annotations;
+using ShellLink.DataObjects;
 using ShellLink.Internals;
+using FileAttributes = ShellLink.DataObjects.FileAttributes;
 
 namespace ShellLink.Loaders
 {
     public static class ShellLinkHeaderLoader
     {
-        public static bool Load(this ShellLinkHeader obj, BinaryReader reader)
+        public static bool Load([NotNull] this ShellLinkHeader obj, BinaryReader reader)
         {
             obj.HeaderSize = reader.ReadInt32();
             obj.LinkCLSID = reader.ReadGuid();

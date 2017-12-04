@@ -1,6 +1,6 @@
 using System;
 
-namespace ShellLink
+namespace ShellLink.DataObjects
 {
     [Flags]
     public enum CommonNetworkRelativeLinkFlags

@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text;
+using JetBrains.Annotations;
 using ShellLink.DataObjects;
 using ShellLink.Internals;
 
@@ -7,7 +8,7 @@ namespace ShellLink.Loaders
 {
     public static class LinkInfoLoader
     {
-        public static bool Load(this LinkInfo obj, BinaryReader reader)
+        public static bool Load([NotNull] this LinkInfo obj, BinaryReader reader)
         {
             var ok = true;
 

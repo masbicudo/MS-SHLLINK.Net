@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using ShellLink.DataObjects;
+using ShellLink.Internals;
 
 namespace ShellLink.Validators
 {

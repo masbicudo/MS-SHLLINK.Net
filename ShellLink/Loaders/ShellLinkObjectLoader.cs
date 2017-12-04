@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Text;
+using JetBrains.Annotations;
 using ShellLink.DataObjects;
+using ShellLink.ExtraData;
 using ShellLink.Internals;
 
 namespace ShellLink.Loaders
@@ -15,10 +17,11 @@ namespace ShellLink.Loaders
         /// and Repair method to try to make the file valid.
         /// </para>
         /// </summary>
+        /// <param name="obj"></param>
         /// <param name="reader"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static bool Load(this ShellLinkObject obj, BinaryReader reader, ShellLinkOptions options = null)
+        public static bool Load([NotNull] this ShellLinkObject obj, BinaryReader reader, ShellLinkOptions options = null)
         {
             if (options == null)
             {

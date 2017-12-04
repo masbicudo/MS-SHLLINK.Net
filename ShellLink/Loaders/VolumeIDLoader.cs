@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text;
+using JetBrains.Annotations;
 using ShellLink.DataObjects;
 using ShellLink.Internals;
 
@@ -7,7 +8,7 @@ namespace ShellLink.Loaders
 {
     public static class VolumeIDLoader
     {
-        public static bool Load(this VolumeID obj, BinaryReader reader)
+        public static bool Load([NotNull] this VolumeID obj, BinaryReader reader)
         {
             obj.VolumeIDSize = reader.ReadUInt32();
             obj.DriveType = (DriveType)reader.ReadInt32();

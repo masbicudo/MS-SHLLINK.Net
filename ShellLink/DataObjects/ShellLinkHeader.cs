@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace ShellLink
+namespace ShellLink.DataObjects
 {
     /// <summary>
     /// The ShellLinkHeader structure contains identification information, timestamps, and flags that specify

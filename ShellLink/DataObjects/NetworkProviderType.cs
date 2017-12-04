@@ -1,4 +1,4 @@
-﻿namespace ShellLink
+﻿namespace ShellLink.DataObjects
 {
     public enum NetworkProviderType
     {

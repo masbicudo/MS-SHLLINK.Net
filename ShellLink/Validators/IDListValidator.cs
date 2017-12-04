@@ -8,12 +8,12 @@ namespace ShellLink.Validators
     {
         public static void Check(this IDList obj, List<Exception> errors)
         {
-            foreach (var itemId in obj.ItemIDList)
+            foreach (var itemID in obj.ItemIDList)
             {
-                if (itemId == null)
-                    errors.Add(new NullReferenceException("ItemId is null"));
+                if (itemID == null)
+                    errors.Add(new NullReferenceException("ItemID is null"));
 
-                itemId?.Check(errors);
+                itemID?.Check(errors);
             }
 
             if (obj.TerminalID != 0)

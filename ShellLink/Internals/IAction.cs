@@ -1,4 +1,4 @@
-namespace ShellLink
+namespace ShellLink.Internals
 {
     public interface IAction<in T>
     {

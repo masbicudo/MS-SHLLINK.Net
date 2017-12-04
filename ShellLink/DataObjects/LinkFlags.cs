@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ShellLink
+namespace ShellLink.DataObjects
 {
     /// <summary>
     /// The LinkFlags structure defines bits that specify which shell link structures are present in the file

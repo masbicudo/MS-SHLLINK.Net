@@ -1,7 +1,6 @@
 ﻿using System;
-using ShellLink.DataObjects;
 
-namespace ShellLink
+namespace ShellLink.DataObjects
 {
     /// <summary>
     /// The LinkTargetIDList structure specifies the target of the link.

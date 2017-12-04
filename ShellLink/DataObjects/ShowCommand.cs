@@ -1,4 +1,4 @@
-﻿namespace ShellLink
+﻿namespace ShellLink.DataObjects
 {
     /// <summary>
     /// A 32-bit unsigned integer that specifies the expected window state of an application launched by the link. This value SHOULD be one of the following.

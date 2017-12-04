@@ -1,10 +1,12 @@
 ﻿using System.IO;
+using JetBrains.Annotations;
+using ShellLink.DataObjects;
 
-namespace ShellLink
+namespace ShellLink.Loaders
 {
     public static class LinkTargetIDListLoader
     {
-        public static bool Load(this LinkTargetIDList obj, BinaryReader reader, ItemIDProvider provider)
+        public static bool Load([NotNull] this LinkTargetIDList obj, BinaryReader reader, ItemIDProvider provider)
         {
             obj.IDListSize = reader.ReadUInt16();
 

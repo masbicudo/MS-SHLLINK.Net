@@ -1,6 +1,6 @@
 using System;
 
-namespace ShellLink
+namespace ShellLink.Internals
 {
     public abstract class Error<T>
     {

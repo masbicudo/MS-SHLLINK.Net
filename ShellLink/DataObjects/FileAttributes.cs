@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ShellLink
+namespace ShellLink.DataObjects
 {
     /// <summary>
     /// The FileAttributesFlags structure defines bits that specify the file attributes of the link target, if the
