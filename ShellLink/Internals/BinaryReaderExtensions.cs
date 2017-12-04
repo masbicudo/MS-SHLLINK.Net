@@ -22,12 +22,22 @@ namespace ShellLink.Internals
                 reader.ReadByte());
         }
 
+        public static void WriteGuid(this BinaryWriter writer, Guid guid)
+        {
+            writer.Write(guid.ToByteArray());
+        }
+
         public static DateTime? ReadDateTime(this BinaryReader reader)
         {
             var val = reader.ReadInt64();
             if (val == 0)
                 return null;
             return DateTime.FromFileTimeUtc(val);
+        }
+
+        public static void WriteDateTime(this BinaryWriter writer, DateTime? dt)
+        {
+            writer.Write(dt?.ToFileTimeUtc() ?? 0L);
         }
 
         /// <summary>
@@ -62,6 +72,20 @@ namespace ShellLink.Internals
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="str"></param>
+        /// <param name="encoding"></param>
+        /// <returns></returns>
+        /// <exception cref="EndOfStreamException"></exception>
+        public static void WriteNullTerminatedString(this BinaryWriter writer, string str, Encoding encoding)
+        {
+            var byteStr = encoding.GetBytes(str + '\0');
+            writer.Write(byteStr);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="reader"></param>
         /// <param name="length">The length of the string measured in bytes.</param>
         /// <param name="encoding"></param>
@@ -71,7 +95,25 @@ namespace ShellLink.Internals
         {
             var b = reader.ReadBytes(length);
             var result = encoding.GetString(b);
+            result = result.TrimEnd('\0');
             return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="str"></param>
+        /// <param name="length">The length of the string measured in bytes.</param>
+        /// <param name="encoding"></param>
+        /// <returns></returns>
+        /// <exception cref="EndOfStreamException"></exception>
+        public static void WriteFixedSizeString(this BinaryWriter writer, string str, int length, Encoding encoding)
+        {
+            var bytes = new byte[length];
+            var byteStr = encoding.GetBytes(str);
+            Array.Copy(byteStr, bytes, length);
+            writer.Write(bytes);
         }
     }
 }
