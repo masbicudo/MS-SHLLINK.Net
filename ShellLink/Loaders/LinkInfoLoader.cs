@@ -27,7 +27,14 @@ namespace ShellLink.Loaders
                 obj.CommonPathSuffixOffsetUnicode = reader.ReadUInt32();
 
             if (obj.LinkInfoFlags.HasFlag(LinkInfoFlags.VolumeIDAndLocalBasePath))
+            {
+                obj.VolumeID = obj.VolumeID ?? new VolumeID();
                 ok &= obj.VolumeID.Load(reader);
+            }
+            else
+            {
+                obj.VolumeID = null;
+            }
 
             if (obj.LinkInfoFlags.HasFlag(LinkInfoFlags.VolumeIDAndLocalBasePath))
                 obj.LocalBasePath = reader.ReadNullTerminatedString(Encoding.Default);

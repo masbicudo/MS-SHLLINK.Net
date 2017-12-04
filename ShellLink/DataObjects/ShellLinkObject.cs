@@ -34,6 +34,19 @@ namespace ShellLink.DataObjects
         [NotNull]
         public StringData StringData { get; } = new StringData();
 
-        //public ExtraData ExtraData { get; set; }
+        /// <summary>
+        /// Zero or more ExtraData structures (section 2.5).
+        /// <para>
+        /// Note: Structures of the Shell Link Binary File Format
+        /// can define strings in fixed-length fields.
+        /// In fixed-length fields, strings MUST be null-terminated.
+        /// If a string is smaller than the size of the field that
+        /// contains it, the bytes in the field following the
+        /// terminating null character are undefined and can have
+        /// any value. The undefined bytes MUST NOT be used.
+        /// </para>
+        /// </summary>
+        [NotNull]
+        public ExtraData.ExtraData ExtraData { get; } = new ExtraData.ExtraData();
     }
 }

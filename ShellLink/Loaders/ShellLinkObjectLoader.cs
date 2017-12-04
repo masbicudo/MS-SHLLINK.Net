@@ -23,13 +23,7 @@ namespace ShellLink.Loaders
         /// <returns></returns>
         public static bool Load([NotNull] this ShellLinkObject obj, BinaryReader reader, ShellLinkOptions options = null)
         {
-            if (options == null)
-            {
-                options = new ShellLinkOptions
-                {
-                    ItemIdProvider = new ItemIDProvider(new IItemIdReader[0]),
-                };
-            }
+            options = ShellLinkOptions.Normalize(options);
 
 
             // reading ShellLinkHeader
@@ -40,13 +34,27 @@ namespace ShellLink.Loaders
             // reading LinkTargetIDList
 
             if (obj.ShellLinkHeader.LinkFlags.HasFlag(LinkFlags.HasLinkTargetIDList))
+            {
+                obj.LinkTargetIDList = obj.LinkTargetIDList ?? new LinkTargetIDList();
                 ok &= obj.LinkTargetIDList.Load(reader, options.ItemIdProvider);
+            }
+            else
+            {
+                obj.LinkTargetIDList = null;
+            }
 
 
             // reading LinkInfo
 
             if (obj.ShellLinkHeader.LinkFlags.HasFlag(LinkFlags.HasLinkInfo))
+            {
+                obj.LinkInfo = obj.LinkInfo ?? new LinkInfo();
                 ok &= obj.LinkInfo.Load(reader);
+            }
+            else
+            {
+                obj.LinkInfo = null;
+            }
 
 
             // reading StringData
@@ -86,6 +94,13 @@ namespace ShellLink.Loaders
                 var sz = reader.ReadUInt16() * szmul;
                 obj.StringData.IconLocation = reader.ReadFixedSizeString(sz, enc);
             }
+
+
+            // reading LinkInfo
+
+            ok &= obj.ExtraData.Load(reader, options.ExtraDataBlockProvider);
+
+            ok &= reader.BaseStream.Position == reader.BaseStream.Length;
 
             return ok;
         }
