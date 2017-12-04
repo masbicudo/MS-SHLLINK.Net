@@ -11,7 +11,7 @@ namespace ShellLink
     /// preceding ItemIDs. This data uniquely identifies the items in
     /// that part of the namespace.
     /// </summary>
-    public abstract class ItemId
+    public abstract class ItemID
     {
         /// <summary>
         /// A 16-bit, unsigned integer that specifies the size, in bytes,
@@ -21,7 +21,12 @@ namespace ShellLink
 
         public const int SizeFieldLength = sizeof(ushort);
 
-        public abstract int GetDataLength();
+        public int GetLength()
+        {
+            return this.GetDataLength() + SizeFieldLength;
+        }
+
+        protected abstract int GetDataLength();
 
         public void WriteTo(BinaryWriter writer)
         {
@@ -31,12 +36,16 @@ namespace ShellLink
 
         protected abstract void WriteDataTo(BinaryWriter writer);
 
-        public virtual void Check(List<Exception> errors)
+        public void Check(List<Exception> errors)
         {
             if (this.ItemIDSize != this.GetDataLength() + SizeFieldLength)
                 errors.Add(new ArgumentException(
                     $"{nameof(ItemIDSize)} is not equal to {nameof(GetDataLength)}() + 2", nameof(this.ItemIDSize)));
+
+
         }
+
+        protected abstract void CheckData(List<Exception> errors);
 
         public virtual void Repair()
         {

@@ -12,14 +12,19 @@ namespace ShellLink
     /// </summary>
     public sealed class ItemIDProvider
     {
-        public ItemIDProvider(IItemIdReader[] itemIdReaders)
+        public ItemIDProvider()
+        {
+            this.ItemIdReaders = new IItemIDReader[0];
+        }
+
+        public ItemIDProvider(IItemIDReader[] itemIdReaders)
         {
             this.ItemIdReaders = itemIdReaders;
         }
 
-        public IReadOnlyCollection<IItemIdReader> ItemIdReaders { get; }
+        public IReadOnlyCollection<IItemIDReader> ItemIdReaders { get; }
 
-        public ItemId Read(BinaryReader reader)
+        public ItemID Read(BinaryReader reader)
         {
             var size = reader.ReadUInt16();
 

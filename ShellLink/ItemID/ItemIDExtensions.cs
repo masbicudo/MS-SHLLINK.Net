@@ -4,11 +4,11 @@ namespace ShellLink
 {
     public static class ItemIDExtensions
     {
-        public static byte[] GetData(this ItemId itemid)
+        public static byte[] GetData(this ItemID itemid)
         {
-            var sz = itemid.GetDataLength();
+            var sz = itemid.GetLength() - ItemID.SizeFieldLength;
             var buffer = new byte[sz];
-            itemid.WriteTo(new BinaryWriter(new SkipBytesMemoryStream(buffer, 2)));
+            itemid.WriteTo(new BinaryWriter(new SkipBytesMemoryStream(buffer, ItemID.SizeFieldLength)));
             return buffer;
         }
 
