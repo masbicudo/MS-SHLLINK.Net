@@ -15,6 +15,7 @@ namespace ShellLink.ExtraData
                     new ExtraDataBlockReader<EnvironmentVariableDataBlock>(),
                     new ExtraDataBlockReader<IconEnvironmentDataBlock>(),
                     new ExtraDataBlockReader<KnownFolderDataBlock>(),
+                    new ExtraDataBlockReader<PropertyStoreDataBlock>(),
                 };
         }
 
