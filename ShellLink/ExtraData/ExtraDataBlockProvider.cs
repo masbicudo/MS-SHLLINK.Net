@@ -12,7 +12,9 @@ namespace ShellLink.ExtraData
                     new ExtraDataBlockReader<ConsoleDataBlock>(),
                     new ExtraDataBlockReader<ConsoleFEDataBlock>(),
                     new ExtraDataBlockReader<DarwinDataBlock>(),
+                    new ExtraDataBlockReader<EnvironmentVariableDataBlock>(),
                     new ExtraDataBlockReader<IconEnvironmentDataBlock>(),
+                    new ExtraDataBlockReader<KnownFolderDataBlock>(),
                 };
         }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -8,47 +8,43 @@ using ShellLink.Internals;
 namespace ShellLink.ExtraData
 {
     /// <summary>
-    /// The IconEnvironmentDataBlock structure specifies
-    /// the path to an icon. The path is encoded using
-    /// environment variables, which makes it possible
-    /// to find the icon across machines where the
-    /// locations vary but are expressed using
-    /// environment variables.
+    /// The EnvironmentVariableDataBlock structure specifies
+    /// a path to environment variable information when the
+    /// link target refers to a location that has a corresponding
+    /// environment variable.
     /// </summary>
-    public sealed class IconEnvironmentDataBlock : ExtraDataBlock
+    public sealed class EnvironmentVariableDataBlock : ExtraDataBlock
     {
         /// <summary>
-        /// A 32-bit, unsigned integer that specifies
-        /// the size of the IconEnvironmentDataBlock
-        /// structure. This value MUST be 0x00000314.
+        /// A 32-bit, unsigned integer that specifies the
+        /// size of the EnvironmentVariableDataBlock structure.
+        /// This value MUST be 0x00000314.
         /// </summary>
         public override int BlockSize { get; set; }
 
         /// <summary>
-        /// A 32-bit, unsigned integer that specifies the
-        /// signature of the IconEnvironmentDataBlock
-        /// extra data section. This value MUST be 0xA0000007.
+        /// A 32-bit, unsigned integer that specifies the signature
+        /// of the EnvironmentVariableDataBlock extra data section.
+        /// This value MUST be 0xA0000001.
         /// </summary>
         public override int BlockSignature { get; set; }
 
         /// <summary>
-        /// A NULL-terminated string, defined by the
-        /// system default code page, which specifies
-        /// a path that is constructed with
-        /// environment variables.
+        /// A NULL-terminated string, defined by the syste
+        ///  default code page, which specifies a path t
+        ///  environment variable information.
         /// </summary>
         public string TargetAnsi { get; set; }
 
         /// <summary>
-        /// An optional, NULL-terminated, Unicode string
-        /// that specifies a path that is constructed with
-        /// environment variables.
+        /// An optional, NULL-terminated, Unicode string that
+        /// specifies a path to environment variable information.
         /// </summary>
         public string TargetUnicode { get; set; }
 
         protected override int GetDataLength() => 0x00000314 - ExtraDataBlock.SizeAndSigFieldLength;
 
-        public override int GetSignatureValue() => unchecked((int)0xA0000007);
+        public override int GetSignatureValue() => unchecked((int)0xA0000001);
 
         protected override void WriteDataTo(BinaryWriter writer)
         {
@@ -65,8 +61,8 @@ namespace ShellLink.ExtraData
 
         protected override void CheckData(List<Exception> errors, ShellLinkObject shellLinkObject)
         {
-            CheckString(errors, this.TargetAnsi, 260, nameof(TargetAnsi));
-            CheckString(errors, this.TargetUnicode, 260, nameof(TargetUnicode));
+            ExtraDataBlock.CheckString(errors, this.TargetAnsi, 260, nameof(TargetAnsi));
+            ExtraDataBlock.CheckString(errors, this.TargetUnicode, 260, nameof(TargetUnicode));
         }
 
         protected override void RepairData()

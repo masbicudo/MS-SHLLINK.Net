@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using ShellLink.DataObjects;
 using ShellLink.Internals;
 
 namespace ShellLink.ExtraData
@@ -295,7 +296,7 @@ namespace ShellLink.ExtraData
             return true;
         }
 
-        protected override void CheckData(List<Exception> errors)
+        protected override void CheckData(List<Exception> errors, ShellLinkObject shellLinkObject)
         {
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using ShellLink.DataObjects;
 
 namespace ShellLink.ExtraData
 {
@@ -56,7 +57,7 @@ namespace ShellLink.ExtraData
 
         protected abstract bool LoadData(BinaryReader reader);
 
-        public void Check(List<Exception> errors)
+        public void Check(List<Exception> errors, ShellLinkObject shellLinkObject)
         {
             if (this.BlockSize != this.GetDataLength() + SizeAndSigFieldLength)
                 errors.Add(new ArgumentException(
@@ -69,10 +70,10 @@ namespace ShellLink.ExtraData
                 errors.Add(new ArgumentException(
                     $"{nameof(BlockSignature)} is not equal to {nameof(GetSignatureValue)}()", nameof(this.BlockSignature)));
 
-            this.CheckData(errors);
+            this.CheckData(errors, shellLinkObject);
         }
 
-        protected abstract void CheckData(List<Exception> errors);
+        protected abstract void CheckData(List<Exception> errors, ShellLinkObject shellLinkObject);
 
         public void Repair()
         {

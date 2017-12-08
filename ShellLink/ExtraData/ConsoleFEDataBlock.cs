@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using ShellLink.DataObjects;
 
 namespace ShellLink.ExtraData
 {
@@ -51,7 +52,7 @@ namespace ShellLink.ExtraData
             return true;
         }
 
-        protected override void CheckData(List<Exception> errors)
+        protected override void CheckData(List<Exception> errors, ShellLinkObject shellLinkObject)
         {
         }
 

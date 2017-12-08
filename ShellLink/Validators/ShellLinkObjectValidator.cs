@@ -58,6 +58,8 @@ namespace ShellLink.Validators
                 errors.Add(new ArgumentNullException($"{nameof(StringData.IconLocation)} should not be null", nameof(StringData.IconLocation)));
             if (!hasIconLocationFlag && obj.LinkTargetIDList != null)
                 errors.Add(new ArgumentException($"{nameof(StringData.IconLocation)} should be null", nameof(StringData.IconLocation)));
+
+            // TODO: check ExtraData
         }
 
         /// <summary>

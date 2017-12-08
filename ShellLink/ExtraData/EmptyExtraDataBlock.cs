@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using ShellLink.DataObjects;
 
 namespace ShellLink.ExtraData
 {
@@ -10,38 +11,38 @@ namespace ShellLink.ExtraData
 
         public override int BlockSignature
         {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
+            get => throw new InvalidOperationException();
+            set => throw new InvalidOperationException();
         }
 
         protected override int GetDataLength()
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException();
         }
 
         public override int GetSignatureValue()
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException();
         }
 
         protected override void WriteDataTo(BinaryWriter writer)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException();
         }
 
         protected override bool LoadData(BinaryReader reader)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException();
         }
 
-        protected override void CheckData(List<Exception> errors)
+        protected override void CheckData(List<Exception> errors, ShellLinkObject shellLinkObject)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException();
         }
 
         protected override void RepairData()
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException();
         }
     }
 }

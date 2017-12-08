@@ -27,7 +27,7 @@ namespace ShellLinkTests
         [TestMethod]
         public void TestMethod2()
         {
-            var fname = @"C:\Windows\WinSxS\amd64_microsoft-windows-explorer-shortcuts_31bf3856ad364e35_10.0.15063.0_none_c8cbc32f49bac819\Control Panel.lnk";
+            var fname = @"C:\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\Control Panel.lnk";
             using (var file = File.Open(fname, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (var reader = new BinaryReader(file))
             {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using ShellLink.DataObjects;
 using ShellLink.Internals;
 
 namespace ShellLink.ExtraData
@@ -64,7 +65,7 @@ namespace ShellLink.ExtraData
             return true;
         }
 
-        protected override void CheckData(List<Exception> errors)
+        protected override void CheckData(List<Exception> errors, ShellLinkObject shellLinkObject)
         {
             CheckString(errors, this.DarwinDataAnsi, 260, nameof(DarwinDataAnsi));
             CheckString(errors, this.DarwinDataUnicode, 260, nameof(DarwinDataUnicode));
@@ -72,7 +73,10 @@ namespace ShellLink.ExtraData
 
         protected override void RepairData()
         {
-            // TODO
+            // TODO: this should be the same for:
+            // - DarwinDataBlock
+            // - EnvironmentVariableDataBlock
+            // - IconEnvironmentDataBlock
         }
     }
 }
