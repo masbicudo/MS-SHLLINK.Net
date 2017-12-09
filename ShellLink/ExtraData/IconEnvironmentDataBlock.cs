@@ -58,8 +58,8 @@ namespace ShellLink.ExtraData
 
         protected override bool LoadData(BinaryReader reader)
         {
-            this.TargetAnsi = reader.ReadFixedSizeString(260, Encoding.Default);
-            this.TargetUnicode = reader.ReadFixedSizeString(520, Encoding.Unicode);
+            this.TargetAnsi = reader.ReadFixedSizeString(260, Encoding.Default, ZeroCharBehavior.RemoveTrailing);
+            this.TargetUnicode = reader.ReadFixedSizeString(520, Encoding.Unicode, ZeroCharBehavior.RemoveTrailing);
             return true;
         }
 

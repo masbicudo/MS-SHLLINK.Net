@@ -279,7 +279,7 @@ namespace ShellLink.ExtraData
             this.FontFamily = (FontFamily)reader.ReadInt32();
             this.FontWeight = reader.ReadInt32();
 
-            this.FaceName = reader.ReadFixedSizeString(32, Encoding.Unicode);
+            this.FaceName = reader.ReadFixedSizeString(32, Encoding.Unicode, ZeroCharBehavior.RemoveTrailing);
 
             this.CursorSize = reader.ReadInt32();
             this.FullScreen = reader.ReadInt32();

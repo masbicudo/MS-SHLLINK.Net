@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace ShellLink.PropertyStore
 {
@@ -42,6 +43,7 @@ namespace ShellLink.PropertyStore
         // TODO: zero char terminator '\0', otherwise, it must be considered Id type.
         // TODO: SEE SerializedPropertyValue_ByName
         // TODO: SEE SerializedPropertyValue_ById
-        public IList<SerializedPropertyValue> SerializedPropertyValues { get; set; }
+        [NotNull]
+        public List<SerializedPropertyValue> SerializedPropertyValues { get; } = new List<SerializedPropertyValue>();
     }
 }

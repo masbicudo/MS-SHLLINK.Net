@@ -60,8 +60,8 @@ namespace ShellLink.ExtraData
 
         protected override bool LoadData(BinaryReader reader)
         {
-            this.DarwinDataAnsi = reader.ReadFixedSizeString(260, Encoding.Default);
-            this.DarwinDataUnicode = reader.ReadFixedSizeString(520, Encoding.Unicode);
+            this.DarwinDataAnsi = reader.ReadFixedSizeString(260, Encoding.Default, ZeroCharBehavior.RemoveTrailing);
+            this.DarwinDataUnicode = reader.ReadFixedSizeString(520, Encoding.Unicode, ZeroCharBehavior.RemoveTrailing);
             return true;
         }
 

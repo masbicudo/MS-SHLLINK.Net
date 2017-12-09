@@ -89,13 +89,25 @@ namespace ShellLink.Internals
         /// <param name="reader"></param>
         /// <param name="length">The length of the string measured in bytes.</param>
         /// <param name="encoding"></param>
+        /// <param name="zcb"></param>
         /// <returns></returns>
         /// <exception cref="EndOfStreamException"></exception>
-        public static string ReadFixedSizeString(this BinaryReader reader, int length, Encoding encoding)
+        public static string ReadFixedSizeString(this BinaryReader reader, int length, Encoding encoding, ZeroCharBehavior zcb)
         {
             var b = reader.ReadBytes(length);
             var result = encoding.GetString(b);
-            result = result.TrimEnd('\0');
+
+            if (zcb == ZeroCharBehavior.RemoveTrailing)
+            {
+                result = result.TrimEnd('\0');
+            }
+            else if (zcb == ZeroCharBehavior.SplitFirst)
+            {
+                var firstZero = result.IndexOf('\0');
+                if (firstZero >= 0)
+                    result = result.Substring(0, firstZero);
+            }
+
             return result;
         }
 
@@ -115,5 +127,23 @@ namespace ShellLink.Internals
             Array.Copy(byteStr, bytes, length);
             writer.Write(bytes);
         }
+    }
+
+    public enum ZeroCharBehavior
+    {
+        /// <summary>
+        /// Keeps all '\0' characters.
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// Removes only the last '\0' characters.
+        /// </summary>
+        RemoveTrailing,
+
+        /// <summary>
+        /// Removes everything after the first '\0' characters.
+        /// </summary>
+        SplitFirst,
     }
 }

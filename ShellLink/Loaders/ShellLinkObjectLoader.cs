@@ -72,27 +72,27 @@ namespace ShellLink.Loaders
             if (hasNameFlag)
             {
                 var sz = reader.ReadUInt16() * szmul;
-                obj.StringData.NameString = reader.ReadFixedSizeString(sz, enc);
+                obj.StringData.NameString = reader.ReadFixedSizeString(sz, enc, ZeroCharBehavior.RemoveTrailing);
             }
             if (hasRelativePathFlag)
             {
                 var sz = reader.ReadUInt16() * szmul;
-                obj.StringData.RelativePath = reader.ReadFixedSizeString(sz, enc);
+                obj.StringData.RelativePath = reader.ReadFixedSizeString(sz, enc, ZeroCharBehavior.RemoveTrailing);
             }
             if (hasWorkingDirFlag)
             {
                 var sz = reader.ReadUInt16() * szmul;
-                obj.StringData.WorkingDir = reader.ReadFixedSizeString(sz, enc);
+                obj.StringData.WorkingDir = reader.ReadFixedSizeString(sz, enc, ZeroCharBehavior.RemoveTrailing);
             }
             if (hasArgumentsFlag)
             {
                 var sz = reader.ReadUInt16() * szmul;
-                obj.StringData.CommandLineArguments = reader.ReadFixedSizeString(sz, enc);
+                obj.StringData.CommandLineArguments = reader.ReadFixedSizeString(sz, enc, ZeroCharBehavior.RemoveTrailing);
             }
             if (hasIconLocationFlag)
             {
                 var sz = reader.ReadUInt16() * szmul;
-                obj.StringData.IconLocation = reader.ReadFixedSizeString(sz, enc);
+                obj.StringData.IconLocation = reader.ReadFixedSizeString(sz, enc, ZeroCharBehavior.RemoveTrailing);
             }
 
 

@@ -1,7 +1,13 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace ShellLink.PropertyStore
 {
+    /// <summary>
+    /// The Property Store Binary File Format is a sequence of Serialized Property Storage structures. The
+    /// sequence MUST be terminated by a Serialized Property Storage structure that specifies 0x00000000
+    /// for the Storage Size field.
+    /// </summary>
     public sealed class SerializedPropertyStore
     {
         /// <summary>
@@ -14,7 +20,8 @@ namespace ShellLink.PropertyStore
         /// A sequence of one or more Serialized Property Storage
         /// structures, as specified in section 2.2.
         /// </summary>
-        public List<SerializedPropertyStorage> SerializedPropertyStorages { get; set; }
+        [NotNull]
+        public List<SerializedPropertyStorage> SerializedPropertyStorages { get; } = new List<SerializedPropertyStorage>();
 
     }
 }
