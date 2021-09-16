@@ -5,3 +5,4 @@ bin/
 *.user
 bin-copy/
 publish/
+.vs/

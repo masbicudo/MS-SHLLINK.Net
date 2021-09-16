@@ -21,7 +21,11 @@ namespace ShellLink.Loaders
         /// <param name="reader"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static bool Load([NotNull] this ShellLinkObject obj, BinaryReader reader, ShellLinkOptions options = null)
+        public static bool Load(
+                [NotNull] this ShellLinkObject obj,
+                BinaryReader reader,
+                ShellLinkOptions options = null
+            )
         {
             options = ShellLinkOptions.Normalize(options);
 
@@ -36,7 +40,7 @@ namespace ShellLink.Loaders
             if (obj.ShellLinkHeader.LinkFlags.HasFlag(LinkFlags.HasLinkTargetIDList))
             {
                 obj.LinkTargetIDList = obj.LinkTargetIDList ?? new LinkTargetIDList();
-                ok &= obj.LinkTargetIDList.Load(reader, options.ItemIdProvider);
+                ok &= obj.LinkTargetIDList.Load(reader, options);
             }
             else
             {
@@ -98,11 +102,18 @@ namespace ShellLink.Loaders
 
             // reading LinkInfo
 
-            ok &= obj.ExtraData.Load(reader, options.ExtraDataBlockProvider);
+            ok &= obj.ExtraData.Load(reader, options);
 
             ok &= reader.BaseStream.Position == reader.BaseStream.Length;
 
             return ok;
+        }
+
+        public static ShellLinkObject Load(BinaryReader reader)
+        {
+            var obj = new ShellLinkObject();
+            Load(obj, reader);
+            return obj;
         }
     }
 }

@@ -52,13 +52,13 @@ namespace ShellLink.ExtraData
 
         public override int GetSignatureValue() => unchecked((int)0xA0000006);
 
-        protected override void WriteDataTo(BinaryWriter writer)
+        protected override void WriteDataTo(BinaryWriter writer, IOptions options)
         {
             writer.WriteFixedSizeString(this.DarwinDataAnsi, 260, Encoding.Default);
             writer.WriteFixedSizeString(this.DarwinDataUnicode, 520, Encoding.Unicode);
         }
 
-        protected override bool LoadData(BinaryReader reader)
+        protected override bool LoadData(BinaryReader reader, IOptions options)
         {
             this.DarwinDataAnsi = reader.ReadFixedSizeString(260, Encoding.Default, ZeroCharBehavior.RemoveTrailing);
             this.DarwinDataUnicode = reader.ReadFixedSizeString(520, Encoding.Unicode, ZeroCharBehavior.RemoveTrailing);

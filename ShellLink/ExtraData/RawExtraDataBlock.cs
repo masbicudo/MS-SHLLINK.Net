@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ShellLink.DataObjects;
+using ShellLink.Internals;
 
 namespace ShellLink.ExtraData
 {
@@ -17,12 +18,12 @@ namespace ShellLink.ExtraData
 
         public override int GetSignatureValue() => this.BlockSignature;
 
-        protected override void WriteDataTo(BinaryWriter writer)
+        protected override void WriteDataTo(BinaryWriter writer, IOptions options)
         {
             writer.Write((byte[]) this.Data);
         }
 
-        protected override bool LoadData(BinaryReader reader)
+        protected override bool LoadData(BinaryReader reader, IOptions options)
         {
             this.BlockSize = reader.ReadInt32();
             this.BlockSignature = reader.ReadInt32();

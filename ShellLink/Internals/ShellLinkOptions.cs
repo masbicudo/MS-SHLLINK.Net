@@ -3,7 +3,8 @@ using ShellLink.ExtraData;
 
 namespace ShellLink.Internals
 {
-    public sealed class ShellLinkOptions
+    public sealed class ShellLinkOptions :
+        IOptions
     {
         public ItemIDProvider ItemIdProvider { get; set; }
         public ExtraDataBlockProvider ExtraDataBlockProvider { get; set; }
@@ -30,16 +31,27 @@ namespace ShellLink.Internals
             if (options.ItemIdProvider == null)
             {
                 if (!isNew) options = options.Clone();
-                options.ItemIdProvider = new ItemIDProvider();
+                options.ItemIdProvider = new ItemIDProvider(options);
             }
 
             if (options.ExtraDataBlockProvider == null)
             {
                 if (!isNew) options = options.Clone();
-                options.ExtraDataBlockProvider = new ExtraDataBlockProvider();
+                options.ExtraDataBlockProvider = new ExtraDataBlockProvider(options);
             }
 
             return options;
+        }
+
+        T IOptions.Get<T>()
+        {
+            if (typeof(T) == typeof(ShellLinkOptions))
+                return (T)(object)this;
+            if (typeof(T) == typeof(ItemIDProvider))
+                return (T)(object)this.ItemIdProvider;
+            if (typeof(T) == typeof(ExtraDataBlockProvider))
+                return (T)(object)this.ExtraDataBlockProvider;
+            return default(T);
         }
     }
 }

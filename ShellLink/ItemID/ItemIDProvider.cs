@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ShellLink.Internals;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ShellLink
@@ -12,9 +13,10 @@ namespace ShellLink
     /// </summary>
     public sealed class ItemIDProvider
     {
-        public ItemIDProvider()
+        public ItemIDProvider(IOptions options)
         {
             this.ItemIdReaders = new IItemIDReader[0];
+            this.Options = options;
         }
 
         public ItemIDProvider(IItemIDReader[] itemIdReaders)
@@ -23,6 +25,7 @@ namespace ShellLink
         }
 
         public IReadOnlyCollection<IItemIDReader> ItemIdReaders { get; }
+        public IOptions Options { get; }
 
         public ItemID Read(BinaryReader reader)
         {
@@ -36,7 +39,7 @@ namespace ShellLink
             foreach (var itemIdReader in this.ItemIdReaders)
             {
                 var subreader = new BinaryReader(new MemoryStream(buffer));
-                var itemid = itemIdReader.Read(subreader);
+                var itemid = itemIdReader.Read(subreader, this.Options);
 
                 // must not be null
                 // must read everything in the buffer

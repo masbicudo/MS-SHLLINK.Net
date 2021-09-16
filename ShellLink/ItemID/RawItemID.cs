@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShellLink.Internals;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -13,7 +14,7 @@ namespace ShellLink
 
         protected override int GetDataLength() => this.Data?.Length ?? 0;
 
-        protected override void WriteDataTo(BinaryWriter writer)
+        protected override void WriteDataTo(BinaryWriter writer, IOptions options)
         {
             if (this.Data != null)
                 writer.Write(this.Data);

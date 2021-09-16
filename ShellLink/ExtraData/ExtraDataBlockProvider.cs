@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using ShellLink.Internals;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ShellLink.ExtraData
 {
     public sealed class ExtraDataBlockProvider
     {
-        public ExtraDataBlockProvider()
+        public ExtraDataBlockProvider(IOptions options)
         {
             this.BlockReaders = new List<IExtraDataBlockReader>
                 {
@@ -16,7 +17,12 @@ namespace ShellLink.ExtraData
                     new ExtraDataBlockReader<IconEnvironmentDataBlock>(),
                     new ExtraDataBlockReader<KnownFolderDataBlock>(),
                     new ExtraDataBlockReader<PropertyStoreDataBlock>(),
+                    new ExtraDataBlockReader<ShimDataBlock>(),
+                    new ExtraDataBlockReader<SpecialFolderDataBlock>(),
+                    new ExtraDataBlockReader<TrackerDataBlock>(),
+                    new ExtraDataBlockReader<VistaAndAboveIDListDataBlock>(),
                 };
+            this.Options = options;
         }
 
         public ExtraDataBlockProvider(IExtraDataBlockReader[] blockReaders)
@@ -25,6 +31,7 @@ namespace ShellLink.ExtraData
         }
 
         public IReadOnlyCollection<IExtraDataBlockReader> BlockReaders { get; }
+        public IOptions Options { get; }
 
         public ExtraDataBlock Read(BinaryReader reader)
         {
@@ -40,7 +47,7 @@ namespace ShellLink.ExtraData
             foreach (var blockReader in this.BlockReaders)
             {
                 var subreader = new BinaryReader(new MemoryStream(buffer));
-                var block = blockReader.Read(subreader, size, sig);
+                var block = blockReader.Read(subreader, size, sig, this.Options);
 
                 // must not be null
                 // must read everything in the buffer

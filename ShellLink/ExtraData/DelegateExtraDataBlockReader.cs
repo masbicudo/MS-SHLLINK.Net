@@ -1,3 +1,4 @@
+using ShellLink.Internals;
 using System;
 using System.IO;
 
@@ -13,7 +14,7 @@ namespace ShellLink.ExtraData
             this.readDelegate = readDelegate;
         }
 
-        public ExtraDataBlock Read(BinaryReader reader, int size, int sig)
+        public ExtraDataBlock Read(BinaryReader reader, int size, int sig, IOptions options)
         {
             var result = this.readDelegate?.Invoke(reader);
             return result;

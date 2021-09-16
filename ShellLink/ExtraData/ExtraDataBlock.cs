@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ShellLink.DataObjects;
+using ShellLink.Internals;
 
 namespace ShellLink.ExtraData
 {
@@ -26,7 +27,7 @@ namespace ShellLink.ExtraData
 
         public abstract int GetSignatureValue();
 
-        public void WriteTo(BinaryWriter writer)
+        public void WriteTo(BinaryWriter writer, IOptions options)
         {
             writer.Write((uint)this.BlockSize);
 
@@ -35,12 +36,12 @@ namespace ShellLink.ExtraData
 
             writer.Write((uint)this.BlockSignature);
 
-            this.WriteDataTo(writer);
+            this.WriteDataTo(writer, options);
         }
 
-        protected abstract void WriteDataTo(BinaryWriter writer);
+        protected abstract void WriteDataTo(BinaryWriter writer, IOptions options);
 
-        public bool Load(BinaryReader reader, bool skipHeader = false)
+        public bool Load(BinaryReader reader, bool skipHeader = false, IOptions options = null)
         {
             if (!skipHeader)
             {
@@ -52,10 +53,11 @@ namespace ShellLink.ExtraData
                 this.BlockSignature = reader.ReadInt32();
             }
 
-            return this.LoadData(reader);
+            bool ok = this.LoadData(reader, options);
+            return ok;
         }
 
-        protected abstract bool LoadData(BinaryReader reader);
+        protected abstract bool LoadData(BinaryReader reader, IOptions options);
 
         public void Check(List<Exception> errors, ShellLinkObject shellLinkObject)
         {

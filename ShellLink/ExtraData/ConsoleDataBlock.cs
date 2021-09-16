@@ -226,7 +226,7 @@ namespace ShellLink.ExtraData
 
         public override int GetSignatureValue() => unchecked((int)0xA0000002);
 
-        protected override void WriteDataTo(BinaryWriter writer)
+        protected override void WriteDataTo(BinaryWriter writer, IOptions options)
         {
             writer.Write((short)this.FillAttributes.GetData());
             writer.Write((short)this.PopupFillAttributes.GetData());
@@ -260,7 +260,7 @@ namespace ShellLink.ExtraData
                 writer.Write((int)this.ColorTable[it]);
         }
 
-        protected override bool LoadData(BinaryReader reader)
+        protected override bool LoadData(BinaryReader reader, IOptions options)
         {
             this.FillAttributes = new ConsoleColors(reader.ReadInt16());
             this.PopupFillAttributes = new ConsoleColors(reader.ReadInt16());

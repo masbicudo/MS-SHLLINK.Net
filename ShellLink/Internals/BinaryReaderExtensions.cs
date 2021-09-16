@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ShellLink.Internals
 {
-    public static class BinaryReaderExtensions
+    public static class IOExtensions
     {
         public static Guid ReadGuid(this BinaryReader reader)
         {
@@ -81,6 +81,124 @@ namespace ShellLink.Internals
         {
             var byteStr = encoding.GetBytes(str + '\0');
             writer.Write(byteStr);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="str"></param>
+        /// <param name="encoding"></param>
+        /// <param name="minSize"></param>
+        /// <param name="maxSize"></param>
+        /// <returns></returns>
+        /// <exception cref="EndOfStreamException"></exception>
+        public static int WriteNullTerminatedString(
+                this BinaryWriter writer,
+                string str,
+                Encoding encoding,
+                int minSize = 0,
+                int maxSize = int.MaxValue,
+                bool reencodeOnTruncate = false
+            )
+        {
+            const int EXTRA_PADDING = 32;
+
+            int[] posOfCharsAtOutput = new int[32];
+
+            var chars = new char[1];
+            int outputSize = MathHelper.Clamp(
+                    2 * str.Length + 2, // assuming 2 bytes per char is optimal
+                    minSize, maxSize
+                );
+            var byteStr = new byte[outputSize + EXTRA_PADDING];
+            var enc = encoding.GetEncoder();
+
+            int inputPos = 0, outputPos = 0;
+            int charsUsed, bytesUsed;
+            bool completed;
+            while (inputPos < str.Length + 1 && outputPos < outputSize)
+            {
+                posOfCharsAtOutput[inputPos % posOfCharsAtOutput.Length] = outputPos;
+                bool isAtEndOfString = inputPos == str.Length;
+                chars[0] = isAtEndOfString ? '\0' : str[inputPos];
+                enc.Convert(
+                        chars, 0, 1,
+                        byteStr, outputPos, byteStr.Length - outputPos,
+                        isAtEndOfString, // flush if at end of string?
+                        out charsUsed,
+                        out bytesUsed,
+                        out completed
+                    );
+                inputPos += charsUsed;
+                outputPos += bytesUsed;
+                if (!completed)
+                {
+                    // increase size of output buffer if less than max size
+                    // otherwise, stop processing
+                    outputSize = MathHelper.Clamp(
+                            outputSize * 2,
+                            minSize, maxSize
+                        );
+                    if (outputSize + EXTRA_PADDING == byteStr.Length)
+                        break;
+                    Array.Resize(ref byteStr, outputSize + EXTRA_PADDING);
+                }
+            }
+            bool truncate = inputPos < str.Length + 1;
+            if (truncate)
+            {
+                // we need to truncate the encoded string
+                for (var it = 0; it < posOfCharsAtOutput.Length; it++)
+                {
+                    if (inputPos <= 0)
+                        break;
+                    inputPos--;
+                    var truncPos = posOfCharsAtOutput[inputPos % posOfCharsAtOutput.Length];
+                    enc.Reset();
+                    if (reencodeOnTruncate)
+                    {
+                        outputPos = 0;
+                        foreach (var ch in str)
+                        {
+                            if (truncPos == outputPos)
+                                break;
+                            chars[0] = ch;
+                            enc.Convert(
+                                    chars, 0, 1,
+                                    byteStr, outputSize, EXTRA_PADDING,
+                                    true, // flush, we are at end of string
+                                    out charsUsed,
+                                    out bytesUsed,
+                                    out completed
+                                );
+                            outputPos += bytesUsed;
+                        }
+                    }
+                    chars[0] = '\0';
+                    enc.Convert(
+                            chars, 0, 1,
+                            byteStr, truncPos, byteStr.Length - truncPos,
+                            true, // flush, we are at end of string
+                            out charsUsed,
+                            out bytesUsed,
+                            out completed
+                        );
+                    outputPos = truncPos + bytesUsed;
+                    if (outputPos <= outputSize)
+                        break;
+                }
+            }
+            else
+            {
+                inputPos--;
+            }
+
+            // fill remaining space up to minSize with zeros
+            var len = MathHelper.Clamp(outputPos, minSize, maxSize);
+
+            writer.Write(byteStr, 0, len);
+            return inputPos;
         }
 
         /// <summary>

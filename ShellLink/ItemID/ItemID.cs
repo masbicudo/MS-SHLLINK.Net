@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShellLink.Internals;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -28,13 +29,13 @@ namespace ShellLink
 
         protected abstract int GetDataLength();
 
-        public void WriteTo(BinaryWriter writer)
+        public void WriteTo(BinaryWriter writer, IOptions options)
         {
             writer.Write(this.ItemIDSize);
-            this.WriteDataTo(writer);
+            this.WriteDataTo(writer, options);
         }
 
-        protected abstract void WriteDataTo(BinaryWriter writer);
+        protected abstract void WriteDataTo(BinaryWriter writer, IOptions options);
 
         public void Check(List<Exception> errors)
         {

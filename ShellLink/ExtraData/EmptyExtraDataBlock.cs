@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ShellLink.DataObjects;
+using ShellLink.Internals;
 
 namespace ShellLink.ExtraData
 {
@@ -25,12 +26,12 @@ namespace ShellLink.ExtraData
             throw new InvalidOperationException();
         }
 
-        protected override void WriteDataTo(BinaryWriter writer)
+        protected override void WriteDataTo(BinaryWriter writer, IOptions options)
         {
             throw new InvalidOperationException();
         }
 
-        protected override bool LoadData(BinaryReader reader)
+        protected override bool LoadData(BinaryReader reader, IOptions options)
         {
             throw new InvalidOperationException();
         }

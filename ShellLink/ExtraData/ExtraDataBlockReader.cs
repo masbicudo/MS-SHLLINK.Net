@@ -1,3 +1,4 @@
+using ShellLink.Internals;
 using System.IO;
 
 namespace ShellLink.ExtraData
@@ -6,7 +7,7 @@ namespace ShellLink.ExtraData
         IExtraDataBlockReader
         where TDataBlock : ExtraDataBlock, new()
     {
-        public ExtraDataBlock Read(BinaryReader reader, int size, int sig)
+        public ExtraDataBlock Read(BinaryReader reader, int size, int sig, IOptions options)
         {
             TDataBlock block = new TDataBlock();
 

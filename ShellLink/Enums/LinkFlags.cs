@@ -3,7 +3,8 @@
 namespace ShellLink.DataObjects
 {
     /// <summary>
-    /// The LinkFlags structure defines bits that specify which shell link structures are present in the file
+    /// The LinkFlags structure defines bits that specify
+    /// which shell link structures are present in the file
     /// format after the ShellLinkHeader structure (section 2.1).
     /// </summary>
     [Flags]
@@ -139,7 +140,7 @@ namespace ShellLink.DataObjects
         /// <summary>
         /// The SpecialFolderDataBlock (section 2.5.9) and the
         /// KnownFolderDataBlock (section 2.5.6) are ignored when loading the shell
-        /// link. If this bit is set, these extra data blocks SHOULD NOT besaved when
+        /// link. If this bit is set, these extra data blocks SHOULD NOT be saved when
         /// saving the shell link.
         /// </summary>
         DisableKnownFolderTracking = 1 << 21,

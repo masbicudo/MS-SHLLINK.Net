@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ShellLink.DataObjects;
+using ShellLink.Internals;
 
 namespace ShellLink.ExtraData
 {
@@ -41,12 +42,12 @@ namespace ShellLink.ExtraData
 
         public override int GetSignatureValue() => unchecked((int)0xA0000004);
 
-        protected override void WriteDataTo(BinaryWriter writer)
+        protected override void WriteDataTo(BinaryWriter writer, IOptions options)
         {
             writer.Write((int)this.CodePage);
         }
 
-        protected override bool LoadData(BinaryReader reader)
+        protected override bool LoadData(BinaryReader reader, IOptions options)
         {
             this.CodePage = reader.ReadInt32();
             return true;

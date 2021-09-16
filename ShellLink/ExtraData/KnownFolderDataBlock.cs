@@ -46,13 +46,13 @@ namespace ShellLink.ExtraData
 
         public override int GetSignatureValue() => unchecked((int)0xA000000B);
 
-        protected override void WriteDataTo(BinaryWriter writer)
+        protected override void WriteDataTo(BinaryWriter writer, IOptions options)
         {
             writer.WriteGuid(this.KnownFolderID);
             writer.Write((int) this.Offset);
         }
 
-        protected override bool LoadData(BinaryReader reader)
+        protected override bool LoadData(BinaryReader reader, IOptions options)
         {
             this.KnownFolderID = reader.ReadGuid();
             this.Offset = reader.ReadInt32();
