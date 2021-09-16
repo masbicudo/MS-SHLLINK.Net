@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShellLink.DataObjects.Enums;
+using System;
 using System.ComponentModel;
 
 namespace ShellLink.DataObjects

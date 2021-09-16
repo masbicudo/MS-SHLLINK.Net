@@ -41,7 +41,7 @@ namespace ShellLink
         {
             if (this.ItemIDSize != this.GetDataLength() + SizeFieldLength)
                 errors.Add(new ArgumentException(
-                    $"{nameof(ItemIDSize)} is not equal to {nameof(GetDataLength)}() + 2", nameof(this.ItemIDSize)));
+                    $"{nameof(this.ItemIDSize)} is not equal to {nameof(GetDataLength)}() + 2", nameof(this.ItemIDSize)));
 
 
         }

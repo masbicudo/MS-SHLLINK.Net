@@ -1,14 +1,14 @@
-﻿using System;
+﻿using ShellLink.DataObjects;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ShellLink.DataObjects;
 
 namespace ShellLink.Validators
 {
     public static class LinkTargetIDListValidator
     {
-        const int TerminalID_Size = ItemID.SizeFieldLength;
+        private const int TerminalID_Size = ItemID.SizeFieldLength;
 
         public static void Check(this LinkTargetIDList obj, List<Exception> errors)
         {

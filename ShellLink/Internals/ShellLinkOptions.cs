@@ -1,5 +1,5 @@
 using JetBrains.Annotations;
-using ShellLink.ExtraData;
+using ShellLink.Actuators.ExtraData;
 
 namespace ShellLink.Internals
 {

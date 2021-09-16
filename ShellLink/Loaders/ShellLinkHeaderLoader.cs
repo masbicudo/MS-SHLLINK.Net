@@ -1,8 +1,9 @@
-using System.IO;
 using JetBrains.Annotations;
 using ShellLink.DataObjects;
+using ShellLink.DataObjects.Enums;
 using ShellLink.Internals;
-using FileAttributes = ShellLink.DataObjects.FileAttributes;
+using System.IO;
+using FileAttributes = ShellLink.DataObjects.Enums.FileAttributes;
 
 namespace ShellLink.Loaders
 {

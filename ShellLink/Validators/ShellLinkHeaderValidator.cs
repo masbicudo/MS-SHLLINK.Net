@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using ShellLink.DataObjects;
+﻿using ShellLink.DataObjects;
+using ShellLink.DataObjects.Enums;
 using ShellLink.Internals;
+using System;
+using System.Collections.Generic;
 
 namespace ShellLink.Validators
 {

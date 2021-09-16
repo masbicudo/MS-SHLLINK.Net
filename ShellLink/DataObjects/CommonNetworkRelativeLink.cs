@@ -1,3 +1,5 @@
+using ShellLink.DataObjects.Enums;
+
 namespace ShellLink.DataObjects
 {
     public sealed class CommonNetworkRelativeLink

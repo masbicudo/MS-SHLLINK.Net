@@ -1,9 +1,10 @@
-﻿using System.IO;
-using System.Text;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
+using ShellLink.Actuators.ExtraData;
 using ShellLink.DataObjects;
-using ShellLink.ExtraData;
+using ShellLink.DataObjects.Enums;
 using ShellLink.Internals;
+using System.IO;
+using System.Text;
 
 namespace ShellLink.Loaders
 {

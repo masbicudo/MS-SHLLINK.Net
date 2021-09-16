@@ -1,4 +1,6 @@
-﻿namespace ShellLink.DataObjects
+﻿using ShellLink.DataObjects.Enums;
+
+namespace ShellLink.DataObjects
 {
     /// <summary>
     /// The LinkInfo structure specifies information necessary to resolve a link target

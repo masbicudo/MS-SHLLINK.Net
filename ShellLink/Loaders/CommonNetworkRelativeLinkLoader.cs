@@ -1,6 +1,6 @@
-using System.IO;
 using JetBrains.Annotations;
 using ShellLink.DataObjects;
+using System.IO;
 
 namespace ShellLink.Loaders
 {
