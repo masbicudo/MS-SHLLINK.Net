@@ -4,7 +4,7 @@ using ShellLink.PropertyStore;
 using System;
 using System.IO;
 
-namespace ShellLink.Actuators.ExtraData
+namespace ShellLink.Actuators
 {
     public static class SerializedPropertyStorageLoader
     {

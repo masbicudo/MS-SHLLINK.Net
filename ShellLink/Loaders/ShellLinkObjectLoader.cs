@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using ShellLink.Actuators.ExtraData;
+using ShellLink.Actuators;
 using ShellLink.DataObjects;
 using ShellLink.DataObjects.Enums;
 using ShellLink.Internals;

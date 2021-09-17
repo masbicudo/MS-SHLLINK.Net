@@ -1,15 +1,15 @@
-﻿using ShellLink.DataObjects.ExtraData;
+﻿using ShellLink.Actuators.ExtraData;
+using ShellLink.DataObjects.ExtraData;
 using ShellLink.Internals;
 using System.Collections.Generic;
 using System.IO;
 
-namespace ShellLink.Actuators.ExtraData
+namespace ShellLink.Actuators
 {
     public sealed class ExtraDataBlockProvider
     {
-        public ExtraDataBlockProvider(IOptions options)
-        {
-            this.DataBlockActuators = new List<ExtraDataBlockActuator>
+        public static IReadOnlyCollection<ExtraDataBlockActuator> DefaultDataBlockActuators { get; set; }
+            = new List<ExtraDataBlockActuator>
                 {
                     new ConsoleDataBlockActuator(),
                     new ConsoleFEDataBlockActuator(),
@@ -23,12 +23,19 @@ namespace ShellLink.Actuators.ExtraData
                     new TrackerDataBlockActuator(),
                     new VistaAndAboveIDListDataBlockActuator(),
                 };
-            this.Options = options;
+
+        public ExtraDataBlockProvider(IOptions options) :
+            this(DefaultDataBlockActuators, options)
+        {
         }
 
-        public ExtraDataBlockProvider(ExtraDataBlockActuator[] blockReaders)
+        public ExtraDataBlockProvider(
+                IReadOnlyCollection<ExtraDataBlockActuator> blockReaders,
+                IOptions options
+            )
         {
             this.DataBlockActuators = blockReaders;
+            this.Options = options;
         }
 
         public IReadOnlyCollection<ExtraDataBlockActuator> DataBlockActuators { get; }
@@ -38,12 +45,13 @@ namespace ShellLink.Actuators.ExtraData
         {
             var size = reader.ReadInt32();
 
-            if (size >= 0 && size < 4)
+            if (size >= 0 && size < ExtraDataBlockActuator.SizeFieldLength)
+                // TODO: must decide if NullExtraDataBlock.BlockSize accepts only 0 or 0 up to 4
                 return new NullExtraDataBlock { BlockSize = size };
 
             var sig = reader.ReadInt32();
 
-            var buffer = reader.ReadBytes(size - 8);
+            var buffer = reader.ReadBytes(size - ExtraDataBlockActuator.SizeAndSigFieldLength);
 
             foreach (var blockActuator in this.DataBlockActuators)
             {

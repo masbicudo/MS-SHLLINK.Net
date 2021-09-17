@@ -3,7 +3,7 @@ using ShellLink.DataObjects.ExtraData;
 using ShellLink.Internals;
 using System.IO;
 
-namespace ShellLink.Actuators.ExtraData
+namespace ShellLink.Actuators
 {
     public static class ExtraDataLoader
     {
