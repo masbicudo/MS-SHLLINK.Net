@@ -4,7 +4,9 @@
 // https://gist.github.com/davehull/b6c119e3afd63053bb92?permalink_comment_id=4384945
 
 using ShellFoldersCodeGenerator.Model.Source;
+using System;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace ShellFoldersCodeGenerator
 {
@@ -13,8 +15,10 @@ namespace ShellFoldersCodeGenerator
         public static void AddItem(
                 AllItemsData data,
                 Guid guid,
-                HashSet<string> names,
-                string clsid,
+                HashSet<string> shellNames,
+                string? clsid,
+                HashSet<string> csidls,
+                string? folderid,
                 string description,
                 HashSet<string> os,
                 string source
@@ -22,17 +26,33 @@ namespace ShellFoldersCodeGenerator
         {
             if (data.byGuid.TryGetValue(guid, out int index))
             {
-                data.allItems[index].os.AddMany(os);
-                data.allItems[index].descriptions.Add(description);
-                data.allItems[index].names.AddMany(names);
-                data.allItems[index].sources.Add(source);
+                var item = data.allItems[index];
+                item.os.AddMany(os);
+                item.descriptions.Add(description);
+                item.shellNames.AddMany(shellNames);
+                item.csidls.AddMany(csidls);
+                if (clsid != null)
+                {
+                    if (item.clsid != null && item.clsid != clsid)
+                        throw new Exception("Item already contains a different clsid");
+                    item.clsid = clsid;
+                }
+                if (folderid != null)
+                {
+                    if (item.folderid != null && item.folderid != folderid)
+                        throw new Exception("Item already contains a different folderid");
+                    item.folderid = folderid;
+                }
+                item.sources.Add(source);
             }
             else
             {
                 data.allItems.Add(new(
                     guid,
-                    names,
+                    shellNames,
                     clsid,
+                    csidls,
+                    folderid,
                     new HashSet<string> { description },
                     os,
                     new HashSet<string> { source }));
@@ -41,30 +61,80 @@ namespace ShellFoldersCodeGenerator
             }
 
             HashSet<string> words;
-            foreach (var name in names)
+
+            if (clsid != null)
             {
-                if (!data.byName.TryGetValue(name, out var indexes))
-                {
-                    indexes = new HashSet<int>();
-                    data.byName.Add(name, indexes);
-                }
-                indexes.Add(index);
+                data.byClsId.DictListAdd(clsid, index);
 
                 words = new HashSet<string>(
-                        Regex.Split(name, @"[^\w\d_]+|(?:(?<!3)|(?!D))(?:\b|(?<=[a-z0-9])(?=[A-Z])|(?=[A-Z][a-z]))")
-                            .Where(w => !string.IsNullOrWhiteSpace(w)),
+                        clsid.Replace("CLSID_", "").SplitWords(),
                         StringComparer.InvariantCultureIgnoreCase
                     );
                 AddWords(data, words, index);
             }
 
+            foreach (var csidl in csidls)
+            {
+                data.byCSIdL.DictListAdd(csidl, index);
+
+                words = new HashSet<string>(
+                        csidl.Replace("CSIDL_", "").SplitWords(),
+                        StringComparer.InvariantCultureIgnoreCase
+                    );
+                AddWords(data, words, index);
+            }
+
+            if (folderid != null)
+            {
+                data.byFolderId.DictListAdd(folderid, index);
+
+                words = new HashSet<string>(
+                        folderid.Replace("FOLDERID_", "").SplitWords(),
+                        StringComparer.InvariantCultureIgnoreCase
+                    );
+                AddWords(data, words, index);
+            }
+
+            foreach (var name in shellNames)
+            {
+                data.byShellName.DictListAdd(name, index);
+
+                words = new HashSet<string>(
+                        name.SplitWords(),
+                        StringComparer.InvariantCultureIgnoreCase
+                    );
+                AddWords(data, words, index);
+            }
+
+            if (clsid != null)
+            {
+
+            }
+
             words = new HashSet<string>(
-                    Regex.Split(description, @"[^\w\d_]+"),
+                    description.SplitWords(),
                     StringComparer.InvariantCultureIgnoreCase
                 );
             AddWords(data, words, index);
         }
-
+        internal static void DictListAdd<TKey, TValue>(this Dictionary<TKey, List<TValue>> dictLists, TKey key, TValue value)
+        {
+            if (!dictLists.TryGetValue(key, out var listValues))
+                dictLists.Add(key, listValues = new List<TValue>());
+            listValues.Add(value);
+        }
+        internal static void DictListAdd<TKey, TValue>(this Dictionary<TKey, HashSet<TValue>> dictSets, TKey key, TValue value)
+        {
+            if (!dictSets.TryGetValue(key, out var listValues))
+                dictSets.Add(key, listValues = new HashSet<TValue>());
+            listValues.Add(value);
+        }
+        public static string[] SplitWords(this string text)
+        {
+            var result = Regex.Split(text, @"[^\w\d_]+|(?:(?<!3)|(?!D))(?:\b|(?<=[a-z0-9])(?=[A-Z])|(?=[A-Z][a-z]))")
+                .Where(w => !string.IsNullOrWhiteSpace(w)).ToArray();
+            return result;
+        }
         public static void AddWords(AllItemsData data, IEnumerable<string> words, int index)
         {
             foreach (var word in words)
@@ -81,7 +151,7 @@ namespace ShellFoldersCodeGenerator
         public static IEnumerable<Item> GetGuidsByDescription(AllItemsData data, string description)
         {
             var words = new HashSet<string>(
-                    Regex.Split(description, @"[^\w\d_]+"),
+                    description.SplitWords(),
                     StringComparer.InvariantCultureIgnoreCase
                 );
             var sets = words
@@ -124,6 +194,21 @@ namespace ShellFoldersCodeGenerator
                 await File.WriteAllTextAsync(cachePathAndFileName, contents);
                 return contents;
             }
+        }
+
+        public static string FindFilePath(string relativePath)
+        {
+            var currentFolder = Path.GetFullPath(".");
+            while (!File.Exists(Path.Combine(currentFolder, relativePath)))
+            {
+                currentFolder = Path.GetDirectoryName(currentFolder);
+            }
+            return Path.Combine(currentFolder, relativePath);
+        }
+        public static string Indent(this string text, string indent)
+        {
+            var result = Regex.Replace(text, @"\n|\r\n", m => m.Groups[0] + indent);
+            return result;
         }
     }
 }

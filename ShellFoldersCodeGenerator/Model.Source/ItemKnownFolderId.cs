@@ -8,9 +8,10 @@
                 string displayName,
                 string folderType,
                 string defaultPath,
-                string csidl,
+                string[] csidls,
                 string legacyDisplayName,
-                string legacyDefaultPath
+                string legacyDefaultPath,
+                HashSet<string> os
             )
         {
             this.folderid = folderid;
@@ -18,9 +19,10 @@
             this.displayName = displayName;
             this.folderType = folderType;
             this.defaultPath = defaultPath;
-            this.csidl = csidl;
+            this.csidls = csidls;
             this.legacyDisplayName = legacyDisplayName;
             this.legacyDefaultPath = legacyDefaultPath;
+            this.os = os;
         }
 
         public string folderid { get; set; }
@@ -28,9 +30,10 @@
         public string displayName { get; set; }
         public string folderType { get; set; }
         public string defaultPath { get; set; }
-        public string csidl { get; set; }
+        public string[] csidls { get; set; }
         public string legacyDisplayName { get; set; }
         public string legacyDefaultPath { get; set; }
+        public HashSet<string> os { get; set; }
     }
 
 }

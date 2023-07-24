@@ -1,16 +1,16 @@
 ﻿namespace ShellFoldersCodeGenerator.Model.Source
 {
-    public class ItemShellIdName
+    public class ItemGuidTitle
     {
-        public ItemShellIdName(string shellid, string title, string source)
+        public ItemGuidTitle(string title, string guid, string source)
         {
-            this.shellid = shellid;
+            this.guid = guid;
             this.title = title;
             this.source = source;
         }
 
-        public string shellid { get; set; }
         public string title { get; set; }
+        public string guid { get; set; }
         public string source { get; set; }
     }
 }

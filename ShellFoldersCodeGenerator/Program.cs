@@ -8,6 +8,7 @@
 // [x] https://learn.microsoft.com/en-us/windows/win32/shell/knownfolderid
 // [ ] https://learn.microsoft.com/en-us/windows/win32/shell/csidl
 
+using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 using Newtonsoft.Json;
 using ShellFoldersCodeGenerator;
@@ -21,8 +22,8 @@ AllItemsSourceData allSrcItems = null;
 
 if (File.Exists("allSrcItems.json"))
 {
-    var json = await File.ReadAllTextAsync("allSrcItems.json");
-    allSrcItems = JsonConvert.DeserializeObject<AllItemsSourceData>(json);
+    var json1 = await File.ReadAllTextAsync("allSrcItems.json");
+    allSrcItems = JsonConvert.DeserializeObject<AllItemsSourceData>(json1);
 }
 else
 {
@@ -68,9 +69,9 @@ else
             var match2 = Regex.Split(line.TextContent, @"(?<=shell:[\w\d_]+(?:\s[\w\d_]+))\s+");
             if (match2.Length == 2)
             {
-                var shellid = match2[0];
+                var shellName = match2[0].Trim();
                 var title = match2[1];
-                allSrcItems.RainMeterShellIdTitle.Add(new(shellid, title, "RainMeter"));
+                allSrcItems.RainMeterShellIdTitle.Add(new(shellName, title, "RainMeter"));
             }
         }
     }
@@ -86,9 +87,9 @@ else
             var tds = tr.QuerySelectorAll("td").ToArray();
             if (tds.Length > 0)
             {
-                var shellid = tds[0].TextContent;
+                var shellName = tds[0].TextContent;
                 var title = tds[1].TextContent;
-                allSrcItems.WinAeroShellIdTitle.Add(new(shellid, title, "WinAero"));
+                allSrcItems.WinAeroShellIdTitle.Add(new(shellName, title, "WinAero"));
             }
         }
         foreach (var tr in tables[1].QuerySelectorAll("tr"))
@@ -197,7 +198,7 @@ else
             string displayName = null;
             string folderType = null;
             string defaultPath = null;
-            string csidl = null;
+            string[] csidls = null;
             string legacyDisplayName = null;
             string legacyDefaultPath = null;
 
@@ -210,22 +211,38 @@ else
                 if (key == "Display Name") displayName = value;
                 if (key == "Folder Type") folderType = value;
                 if (key == "Default Path") defaultPath = value;
-                if (key == "CSIDL Equivalent") csidl = value;
+                if (key == "CSIDL") csidls = value.Split(",").Select(s=>s.Trim()).ToArray();
+                if (key == "CSIDL Equivalent") csidls = value.Split(",").Select(s=>s.Trim()).ToArray();
+                if (key == "CSIDL Equivalents") csidls = value.Split(",").Select(s=>s.Trim()).ToArray();
                 if (key == "Legacy Display Name") legacyDisplayName = value;
                 if (key == "Legacy Default Path") legacyDefaultPath = value;
             }
 
             if (guid != null)
             {
+                var winVers = new HashSet<string>();
+                foreach (var csidl in csidls)
+                {
+                    var matchWinVer = Regex.Matches(csidl, @"Windows\s+([\d\w\.]+)");
+                    foreach (Match match in matchWinVer)
+                    {
+                        winVers.Add(match.Groups[1].Value);
+                    }
+                    if (csidl == "None")
+                    {
+                        csidls = Array.Empty<string>();
+                    }
+                }
                 allSrcItems.MicrosoftKnownFolderId.Add(new(
                         folderid,
                         guid,
                         displayName,
                         folderType,
                         defaultPath,
-                        csidl,
+                        csidls,
                         legacyDisplayName,
-                        legacyDefaultPath
+                        legacyDefaultPath,
+                        winVers
                     ));
             }
         }
@@ -238,158 +255,150 @@ else
 foreach (var item in allSrcItems.libfwsi_Items)
 {
     Helper.AddItem(
-        allData,
-        new Guid(item.guid),
-        new HashSet<string>(),
-        item.clsid,
-        item.description,
-        new HashSet<string>(item.winvers.Split(",").Select(x => x.Trim())),
-        item.source);
+        data: allData,
+        guid: new(item.guid),
+        shellNames: new(),
+        clsid: item.clsid == "" ? null : item.clsid,
+        csidls: new(),
+        folderid: null,
+        description: item.description,
+        os: new(item.winvers.Split(",").Select(x => x.Trim())),
+        source: item.source);
 }
 
 {
-    var dictTitleToShellId = new Dictionary<string, HashSet<string>>();
+    var dictTitleToShellName = new Dictionary<string, HashSet<string>>();
     foreach (var item in allSrcItems.RainMeterShellIdTitle)
     {
-        if (!dictTitleToShellId.TryGetValue(item.title, out var shellId))
+        if (!dictTitleToShellName.TryGetValue(item.title, out var shellNames))
         {
-            shellId = new HashSet<string>();
-            dictTitleToShellId.Add(item.title, shellId);
+            shellNames = new HashSet<string>();
+            dictTitleToShellName.Add(item.title, shellNames);
         }
-        shellId.Add(item.shellid.Replace("shell:", ""));
+        shellNames.Add(item.shellName.Replace("shell:", ""));
     }
     foreach (var item in allSrcItems.RainMeterTitleGuid)
     {
-        if (!dictTitleToShellId.TryGetValue(item.title, out var names))
-            names = new HashSet<string>();
+        if (!dictTitleToShellName.TryGetValue(item.title, out var shellNames))
+            shellNames = new HashSet<string>();
         Helper.AddItem(
-            allData,
-            new Guid(item.guid),
-            names,
-            "",
-            item.title,
-            new HashSet<string>(),
-            item.source);
+            data: allData,
+            guid: new(item.guid),
+            shellNames: shellNames,
+            clsid: null,
+            csidls: new(),
+            folderid: null,
+            description: item.title,
+            os: new(),
+            source: item.source);
     }
 }
 
 {
-    var dictTitleToShellId = new Dictionary<string, HashSet<string>>();
+    var dictTitleToShellNames = new Dictionary<string, HashSet<string>>();
     foreach (var item in allSrcItems.WinAeroShellIdTitle)
     {
-        if (!dictTitleToShellId.TryGetValue(item.title, out var shellId))
+        if (!dictTitleToShellNames.TryGetValue(item.title, out var shellName))
         {
-            shellId = new HashSet<string>();
-            dictTitleToShellId.Add(item.title, shellId);
+            shellName = new HashSet<string>();
+            dictTitleToShellNames.Add(item.title, shellName);
         }
-        shellId.Add(item.shellid.Replace("shell:", ""));
+        shellName.Add(item.shellName.Replace("shell:", ""));
     }
     foreach (var item in allSrcItems.WinAeroGuidTitle)
     {
-        var guid = new Guid(item.guid.Replace("shell:::", ""));
-        var winVers = new HashSet<string>(new[] { "11" });
-        var clsid = "";
-        var description = item.title;
-        if (!dictTitleToShellId.TryGetValue(item.title, out var names))
-            names = new HashSet<string>();
+        if (!dictTitleToShellNames.TryGetValue(item.title, out var shellNames))
+            shellNames = new HashSet<string>();
         Helper.AddItem(
-            allData,
-            guid,
-            names,
-            clsid,
-            description,
-            winVers,
-            item.source);
+            data: allData,
+            guid: new(item.guid.Replace("shell:::", "")),
+            shellNames: shellNames,
+            clsid: null,
+            csidls: new(),
+            folderid: null,
+            description: item.title,
+            os: new(new[] { "11" }),
+            source: item.source);
     }
 }
 
 {
     foreach (var item in allSrcItems.DaveHullGuidTitle)
     {
-        var guid = new Guid(item.guid);
-        var winVers = new HashSet<string>();
-        var clsid = "";
-        var description = item.title;
         Helper.AddItem(
-            allData,
-            guid,
-            new HashSet<string>(),
-            clsid,
-            description,
-            winVers,
-            item.source);
+            data: allData,
+            guid: new(item.guid),
+            shellNames: new(),
+            clsid: null,
+            csidls: new(),
+            folderid: null,
+            description: item.title,
+            os: new(),
+            source: item.source);
     }
 }
 
 {
     foreach (var item in allSrcItems.EricZimmermanGuidTitle)
     {
-        var guid = new Guid(item.guid);
-        var winVers = new HashSet<string>();
-        var clsid = "";
-        var description = item.title;
         Helper.AddItem(
-            allData,
-            guid,
-            new HashSet<string>(),
-            clsid,
-            description,
-            winVers,
-            item.source);
+            data: allData,
+            guid: new(item.guid),
+            shellNames: new(),
+            clsid: null,
+            csidls: new(),
+            folderid: null,
+            description: item.title,
+            os: new(),
+            source: item.source);
     }
 }
 
 {
     foreach (var item in allSrcItems.Microsoft2013)
     {
-        var guid = new Guid(item.guid);
-        var winVers = new HashSet<string>(item.winvers.Split(",").Select(x => x.Trim()));
-        var clsid = "";
-        var description = item.title;
         Helper.AddItem(
-            allData,
-            guid,
-            new HashSet<string>(),
-            clsid,
-            description,
-            winVers,
-            item.source);
+            data: allData,
+            guid: new(item.guid),
+            shellNames: new(),
+            clsid: null,
+            csidls: new(),
+            folderid: null,
+            description: item.title,
+            os: new(item.winvers.Split(",").Select(x => x.Trim())),
+            source: item.source);
     }
 }
 
 {
     foreach (var item in allSrcItems.Microsoft2022)
     {
-        var guid = new Guid(item.guid);
-        var winVers = new HashSet<string>();
-        var clsid = "";
-        var description = item.title;
         Helper.AddItem(
-            allData,
-            guid,
-            new HashSet<string>(),
-            clsid,
-            description,
-            winVers,
-            item.source);
+            data: allData,
+            guid: new(item.guid),
+            shellNames: new(),
+            clsid: null,
+            csidls: new(),
+            folderid: null,
+            description: item.title,
+            os: new(),
+            source: item.source);
     }
 }
 
 {
     foreach (var item in allSrcItems.MicrosoftKnownFolderId)
     {
-        var guid = new Guid(item.guid);
-        var winVers = new HashSet<string>();
-        var clsid = "";
-        var description = item.displayName;
         Helper.AddItem(
-            allData,
-            guid,
-            new HashSet<string>(),
-            clsid,
-            description,
-            winVers,
-            "microsoft-knownfolderid");
+            data: allData,
+            guid: new(item.guid),
+            shellNames: new(),
+            clsid: null,
+            csidls: new(item.csidls),
+            folderid: item.folderid,
+            description: item.displayName,
+            os: new(item.os),
+            source: "Microsoft-KnownFolderIds");
     }
 }
 
@@ -397,3 +406,11 @@ foreach (var item in allSrcItems.libfwsi_Items)
 var allControlPanel = Helper.GetGuidsByDescription(allData, "control panel").ToArray();
 foreach (var guid in allControlPanel)
     Console.WriteLine(guid);
+
+var code = CodeGenerator.GenerateClassOfKnownFolders("ShellLink.KnownFolders", allData);
+var pathForClassOfKnownFoldersCs = Helper.FindFilePath("ShellLink\\KnownFolders\\KnownFolders.generated.cs");
+await File.WriteAllTextAsync(pathForClassOfKnownFoldersCs, code);
+
+var json = JsonConvert.SerializeObject(allData, Formatting.Indented);
+var pathForClassOfKnownFoldersJson = Helper.FindFilePath("ShellLink\\KnownFolders\\AllKFData.json");
+await File.WriteAllTextAsync(pathForClassOfKnownFoldersJson, json);

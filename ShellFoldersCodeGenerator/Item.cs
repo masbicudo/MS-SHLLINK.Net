@@ -8,24 +8,30 @@ namespace ShellFoldersCodeGenerator
     public class Item
     {
         public Guid guid;
-        public HashSet<string> names;
-        public string clsid;
+        public HashSet<string> shellNames;
+        public string? clsid;
+        public HashSet<string> csidls;
+        public string? folderid;
         public HashSet<string> descriptions;
         public HashSet<string> os;
         public HashSet<string> sources;
 
         public Item(
                 Guid guid,
-                HashSet<string> names,
-                string clsid,
+                HashSet<string> shellNames,
+                string? clsid,
+                HashSet<string> csidls,
+                string? folderid,
                 HashSet<string> descriptions,
                 HashSet<string> os,
                 HashSet<string> sources
             )
         {
             this.guid = guid;
-            this.names = names;
+            this.shellNames = shellNames;
             this.clsid = clsid;
+            this.csidls = csidls;
+            this.folderid = folderid;
             this.descriptions = descriptions;
             this.os = os;
             this.sources = sources;
@@ -34,10 +40,11 @@ namespace ShellFoldersCodeGenerator
         public override string ToString()
         {
             var strOs = string.Join(", ", os);
-            var strNames = string.Join(", ", names);
+            var strNames = string.Join(", ", shellNames);
             var strDescs = string.Join(", ", descriptions);
             var strSrc = string.Join(", ", sources);
-            var str = $"Item({guid}, {{{strNames}}}, {clsid}, {{{strDescs}}}, {{{strOs}}}, {{{strSrc}}})";
+            var strcsidls = string.Join(", ", csidls);
+            var str = $"Item({guid}, {{{strNames}}}, {clsid}, {{{strcsidls}}}, {folderid}, {{{strDescs}}}, {{{strOs}}}, {{{strSrc}}})";
             return str;
         }
     }
