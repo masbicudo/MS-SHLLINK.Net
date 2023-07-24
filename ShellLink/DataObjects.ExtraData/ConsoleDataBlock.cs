@@ -13,7 +13,7 @@ namespace ShellLink.DataObjects.ExtraData
         /// A 32-bit, unsigned integer that specifies the size of the
         /// ConsoleDataBlock structure. This value MUST be 0x000000CC.
         /// </summary>
-        public override int BlockSize { get; set; }
+        public override uint BlockSize { get; set; }
 
         /// <summary>
         /// A 32-bit, unsigned integer that specifies the signature 

@@ -17,7 +17,7 @@ namespace ShellLink.DataObjects.ExtraData
         /// the size of the IconEnvironmentDataBlock
         /// structure. This value MUST be 0x00000314.
         /// </summary>
-        public override int BlockSize { get; set; }
+        public override uint BlockSize { get; set; }
 
         /// <summary>
         /// A 32-bit, unsigned integer that specifies the

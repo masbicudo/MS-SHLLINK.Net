@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShellLink.ItemID;
+using System;
 using System.Collections.Generic;
 
 namespace ShellLink.DataObjects
@@ -11,7 +12,7 @@ namespace ShellLink.DataObjects
         /// <summary>
         /// An array of zero or more ItemID structures (section 2.2.2).
         /// </summary>
-        public List<ItemID> ItemIDList { get; } = new List<ItemID>();
+        public List<ShellItemId> ItemIDList { get; } = new List<ShellItemId>();
 
         /// <summary>
         /// A 16-bit, unsigned integer that indicates the end of the item IDs.

@@ -116,5 +116,12 @@ namespace ShellLink.Loaders
             Load(obj, reader);
             return obj;
         }
+
+        public static ShellLinkObject Load(BinaryReader reader, ShellLinkOptions options)
+        {
+            var obj = new ShellLinkObject();
+            Load(obj, reader, options);
+            return obj;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using ShellLink.DataObjects;
 using ShellLink.Internals;
+using ShellLink.ItemID.Actuators;
 using System.IO;
 
 namespace ShellLink.Loaders

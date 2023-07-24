@@ -12,7 +12,7 @@
         /// the size of the ShimDataBlock structure.
         /// This value MUST be greater than or equal to 0x00000088.
         /// </summary>
-        public override int BlockSize { get; set; }
+        public override uint BlockSize { get; set; }
 
         /// <summary>
         /// A 32-bit, unsigned integer that specifies

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace ShellLink
+namespace ShellLink.ItemID.Actuators
 {
     /// <summary>
     /// ItemIDs must be providaded through a class because they are complex,
@@ -15,19 +15,19 @@ namespace ShellLink
     {
         public ItemIDProvider(IOptions options)
         {
-            this.ItemIdReaders = new IItemIDReader[0];
-            this.Options = options;
+            ItemIdReaders = new IItemIDReader[0];
+            Options = options;
         }
 
         public ItemIDProvider(IItemIDReader[] itemIdReaders)
         {
-            this.ItemIdReaders = itemIdReaders;
+            ItemIdReaders = itemIdReaders;
         }
 
         public IReadOnlyCollection<IItemIDReader> ItemIdReaders { get; }
         public IOptions Options { get; }
 
-        public ItemID Read(BinaryReader reader)
+        public ShellItemId Read(BinaryReader reader)
         {
             var size = reader.ReadUInt16();
 
@@ -36,10 +36,10 @@ namespace ShellLink
 
             var buffer = reader.ReadBytes(size - 2);
 
-            foreach (var itemIdReader in this.ItemIdReaders)
+            foreach (var itemIdReader in ItemIdReaders)
             {
                 var subreader = new BinaryReader(new MemoryStream(buffer));
-                var itemid = itemIdReader.Read(subreader, this.Options);
+                var itemid = itemIdReader.Read(subreader, Options);
 
                 // must not be null
                 // must read everything in the buffer

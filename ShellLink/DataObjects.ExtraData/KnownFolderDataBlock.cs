@@ -15,7 +15,7 @@ namespace ShellLink.DataObjects.ExtraData
         /// the KnownFolderDataBlock structure.
         /// This value MUST be 0x0000001C.
         /// </summary>
-        public override int BlockSize { get; set; }
+        public override uint BlockSize { get; set; }
 
         /// <summary>
         /// A 32-bit, unsigned integer that specifies the signature

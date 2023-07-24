@@ -14,7 +14,7 @@ namespace ShellLink.DataObjects.ExtraData
         /// PropertyStoreDataBlock structure.
         /// This value MUST be greater than or equal to 0x0000000C.
         /// </summary>
-        public override int BlockSize { get; set; }
+        public override uint BlockSize { get; set; }
 
         /// <summary>
         /// A 32-bit, unsigned integer that specifies the signature of the

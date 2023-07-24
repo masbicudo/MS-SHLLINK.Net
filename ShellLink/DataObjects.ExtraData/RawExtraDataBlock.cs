@@ -4,7 +4,7 @@
     {
         public byte[] Data { get; set; }
 
-        public override int BlockSize { get; set; }
+        public override uint BlockSize { get; set; }
 
         public override int BlockSignature { get; set; }
     }

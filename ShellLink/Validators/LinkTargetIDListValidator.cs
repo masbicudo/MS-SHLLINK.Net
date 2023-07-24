@@ -1,4 +1,6 @@
 ﻿using ShellLink.DataObjects;
+using ShellLink.Internals;
+using ShellLink.ItemID;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,15 +10,18 @@ namespace ShellLink.Validators
 {
     public static class LinkTargetIDListValidator
     {
-        private const int TerminalID_Size = ItemID.SizeFieldLength;
+        private const int TerminalID_Size = 2;
 
-        public static void Check(this LinkTargetIDList obj, List<Exception> errors)
+        public static void Check(this LinkTargetIDList obj, List<Exception> errors, IOptions options)
         {
             obj.IDList.Check(errors);
 
+            
+
             var sum = obj.IDList.ItemIDList
-                          .Where(x => x != null)
-                          .Sum(x => x.GetLength()) + TerminalID_Size;
+                        .Where(x => x != null)
+                        .Sum(x => options.GetActuatorFor(x.GetType()).GetLength(new(x, options)))
+                        + TerminalID_Size;
 
             if (obj.IDListSize != sum)
                 errors.Add(new InvalidDataException("IDListSize must match the size of all ItemIDList items combined."));

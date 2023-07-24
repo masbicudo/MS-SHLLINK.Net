@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="KnownFolders\AllKFData.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="KnownFolders\AllKFData.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
   </ItemGroup>
 

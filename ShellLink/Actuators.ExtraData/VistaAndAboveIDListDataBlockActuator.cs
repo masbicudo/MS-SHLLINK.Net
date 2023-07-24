@@ -1,6 +1,7 @@
 ﻿using ShellLink.DataObjects;
 using ShellLink.DataObjects.ExtraData;
 using ShellLink.Internals;
+using ShellLink.ItemID.Actuators;
 using System;
 using System.Collections.Generic;
 using System.IO;

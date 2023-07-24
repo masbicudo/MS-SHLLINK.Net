@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ShellLink.Internals;
 using ShellLink.Loaders;
 
 namespace ShellLinkTests
@@ -26,6 +28,19 @@ namespace ShellLinkTests
             using (var reader = new BinaryReader(file))
             {
                 var obj = ShellLinkObjectLoader.Load(reader);
+            }
+        }
+
+        [TestMethod]
+        public void TestMethod_WhatsappUWP()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "ShellLinkTests.LinkFiles.WhatsApp.lnk";
+
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            using (var reader = new BinaryReader(stream))
+            {
+                var obj = ShellLinkObjectLoader.Load(reader, ShellLinkOptions.AllLoaders());
             }
         }
     }

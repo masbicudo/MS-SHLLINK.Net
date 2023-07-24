@@ -4,7 +4,7 @@ namespace ShellLink.DataObjects.ExtraData
 {
     public sealed class NullExtraDataBlock : ExtraDataBlock
     {
-        public override int BlockSize
+        public override uint BlockSize
         {
             get => 0;
             set

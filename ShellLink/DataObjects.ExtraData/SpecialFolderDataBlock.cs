@@ -13,7 +13,7 @@
         /// the size of the SpecialFolderDataBlock structure.
         /// This value MUST be 0x00000010.
         /// </summary>
-        public override int BlockSize { get; set; }
+        public override uint BlockSize { get; set; }
 
         /// <summary>
         /// A 32-bit, unsigned integer that specifies
