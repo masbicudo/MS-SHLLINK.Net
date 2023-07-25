@@ -29,11 +29,11 @@ namespace ShellLink.ItemID.Actuators
             return true;
         }
 
-        public int GetLength(LengthParams<ExtensionBlock_0xbeef0017> arguments)
+        public uint GetLength(LengthParams<ExtensionBlock_0xbeef0017> arguments)
         {
             var baseArguments = arguments.ConvertTo<ExtensionBlock>();
             var totalSize = base.GetLength(baseArguments);
-            totalSize += (7 * 4) + (1 * 8) + (arguments.item.Unknown9.Length) + (1 * 16);
+            totalSize += (7 * 4u) + (1 * 8u) + (uint)(arguments.item.Unknown9.Length) + (1 * 16u);
             return totalSize;
         }
 

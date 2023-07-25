@@ -7,6 +7,6 @@ namespace ShellLink.Internals
     public interface IOptions
     {
         T Get<T>();
-        IActuator<ShellItemId> GetActuatorFor(Type type);
+        IActuator<ShellItemId> GetActuatorForShellItemId(Type type);
     }
 }

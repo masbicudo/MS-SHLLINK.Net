@@ -28,7 +28,7 @@ namespace ShellLink.Actuators.ExtraData
         {
             if (!skipHeader)
             {
-                extraDataBlock.BlockSize = reader.ReadInt32();
+                extraDataBlock.BlockSize = reader.ReadUInt16();
 
                 if (this is NullExtraDataBlock)
                     return true;
@@ -94,8 +94,7 @@ namespace ShellLink.Actuators.ExtraData
         }
 
         protected abstract void RepairData(T extraDataBlock);
-
-        public override ExtraDataBlock Read(BinaryReader reader, int size, int sig, IOptions options)
+        public override ExtraDataBlock Read(BinaryReader reader, uint size, int sig, IOptions options)
         {
             if (sig != this.StandardBlockSignature)
                 return null;

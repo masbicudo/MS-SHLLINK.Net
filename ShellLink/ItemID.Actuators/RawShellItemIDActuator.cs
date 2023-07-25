@@ -11,9 +11,9 @@ namespace ShellLink.ItemID.Actuators
             return true;
         }
 
-        protected override int GetDataLength(LengthParams<RawItemID> arguments)
+        protected override uint GetDataLength(LengthParams<RawItemID> arguments)
         {
-            return arguments.item.Data.Length;
+            return (uint)arguments.item.Data.Length;
         }
 
         protected override bool ReadData(ReadParams<RawItemID> arguments)

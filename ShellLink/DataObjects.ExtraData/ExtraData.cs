@@ -32,6 +32,6 @@ namespace ShellLink.DataObjects.ExtraData
         /// A 32-bit, unsigned integer that indicates the end of the item IDs.
         /// This value MUST be &lt; 4.
         /// </summary>
-        public int TerminalID { get; set; }
+        public uint TerminalID { get; set; }
     }
 }

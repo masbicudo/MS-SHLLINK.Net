@@ -18,7 +18,9 @@ namespace ShellLink.Actuators.ExtraData
         {
             foreach (var itemId in edb.IDList.ItemIDList)
             {
-                itemId.WriteTo(writer, options);
+                var actuator = options.GetActuatorForShellItemId(itemId.GetType());
+                if (!actuator.Write(new(itemId, writer, options)))
+                    return;
             }
         }
 

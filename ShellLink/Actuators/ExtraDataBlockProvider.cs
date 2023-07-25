@@ -1,6 +1,7 @@
 ﻿using ShellLink.Actuators.ExtraData;
 using ShellLink.DataObjects.ExtraData;
 using ShellLink.Internals;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -43,7 +44,7 @@ namespace ShellLink.Actuators
 
         public ExtraDataBlock Read(BinaryReader reader)
         {
-            var size = reader.ReadInt32();
+            var size = reader.ReadUInt32();
 
             if (size >= 0 && size < ExtraDataBlockActuator.SizeFieldLength)
                 // TODO: must decide if NullExtraDataBlock.BlockSize accepts only 0 or 0 up to 4
@@ -51,11 +52,13 @@ namespace ShellLink.Actuators
 
             var sig = reader.ReadInt32();
 
-            var buffer = reader.ReadBytes(size - ExtraDataBlockActuator.SizeAndSigFieldLength);
+            var buffer = reader.ReadBytes((int)(size - ExtraDataBlockActuator.SizeAndSigFieldLength));
 
             foreach (var blockActuator in this.DataBlockActuators)
             {
                 var subreader = new BinaryReader(new MemoryStream(buffer));
+                if (size >= 0x80000000u)
+                    throw new NotImplementedException("size >= 0x80000000u not implemented");
                 var block = blockActuator.Read(subreader, size, sig, this.Options);
 
                 // must not be null

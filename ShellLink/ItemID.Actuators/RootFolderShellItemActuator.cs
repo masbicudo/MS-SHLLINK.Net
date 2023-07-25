@@ -19,14 +19,14 @@ namespace ShellLink.ItemID.Actuators
             return true;
         }
 
-        protected override int GetDataLength(LengthParams<RootFolderShellItem> arguments)
+        protected override uint GetDataLength(LengthParams<RootFolderShellItem> arguments)
         {
             // https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item
-            var totalSize = 18;
+            var totalSize = 18u;
             totalSize += this.GetExtensionBlockLength(arguments);
             return totalSize;
         }
-        protected int GetExtensionBlockLength(LengthParams<RootFolderShellItem> arguments)
+        protected uint GetExtensionBlockLength(LengthParams<RootFolderShellItem> arguments)
         {
             var extensionBlockActuator = arguments.options.Get<ExtensionBlock_0xbeef0017Actuator>();
             if (extensionBlockActuator == null)

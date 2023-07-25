@@ -23,13 +23,13 @@ namespace ShellLink.ItemID.Actuators
         }
         protected abstract bool CheckData(CheckParams<TShellItemId> arguments);
 
-        public virtual int GetLength(LengthParams<TShellItemId> arguments)
+        public virtual uint GetLength(LengthParams<TShellItemId> arguments)
         {
-            var dataLength = 2;
+            var dataLength = 2u;
             dataLength += this.GetDataLength(new(arguments.item, arguments.options));
             return dataLength;
         }
-        protected abstract int GetDataLength(LengthParams<TShellItemId> arguments);
+        protected abstract uint GetDataLength(LengthParams<TShellItemId> arguments);
 
         public virtual bool Read(ReadParams<TShellItemId> arguments)
         {
@@ -42,7 +42,10 @@ namespace ShellLink.ItemID.Actuators
 
         public virtual bool Repair(RepairParams<TShellItemId> arguments)
         {
-            arguments.item.ItemIDSize = this.GetLength(new(arguments.item, arguments.options));
+            var itemIdSize = this.GetLength(new(arguments.item, arguments.options));
+            if (itemIdSize >= 0x10000u)
+                throw new NotImplementedException("itemIdSize >= 0x8000u not implemented");
+            arguments.item.ItemIDSize = (ushort)itemIdSize;
             if (!this.RepairData(arguments))
                 return false;
             return true;

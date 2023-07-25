@@ -1,5 +1,6 @@
 ﻿using ShellLink.DataObjects;
 using ShellLink.DataObjects.Enums;
+using ShellLink.Internals;
 using System;
 using System.Collections.Generic;
 
@@ -13,7 +14,7 @@ namespace ShellLink.Validators
         /// </summary>
         /// <param name="errors"></param>
         /// <param name="findFiles">Indicates that references to files that don't exist should be considered as errors.</param>
-        public static void Check(this ShellLinkObject obj, List<Exception> errors, bool findFiles = false)
+        public static void Check(this ShellLinkObject obj, List<Exception> errors, bool findFiles = false, IOptions options = null)
         {
             obj.ShellLinkHeader.Check(errors);
 
@@ -23,7 +24,7 @@ namespace ShellLink.Validators
             if (!hasLinkTargetIDListFlag && obj.LinkTargetIDList != null)
                 errors.Add(new ArgumentException($"{nameof(LinkTargetIDList)} should be null", nameof(LinkTargetIDList)));
 
-            obj.LinkTargetIDList?.Check(errors);
+            obj.LinkTargetIDList?.Check(errors, options);
 
 
             obj.LinkInfo?.Check(errors);
@@ -76,7 +77,7 @@ namespace ShellLink.Validators
         /// </summary>
         /// <param name="searchFiles">Indicates that missing files should be replaced by valid files if a similar file can be found.</param>
         /// <returns></returns>
-        public static bool Repair(this ShellLinkObject obj, bool searchFiles = false)
+        public static bool Repair(this ShellLinkObject obj, bool searchFiles = false, IOptions options = null)
         {
             bool ok = true;
 
@@ -99,7 +100,7 @@ namespace ShellLink.Validators
                 obj.ShellLinkHeader.LinkFlags |= LinkFlags.HasLinkTargetIDList;
             }
 
-            ok &= obj.LinkTargetIDList?.Repair() ?? true;
+            ok &= obj.LinkTargetIDList?.Repair(options) ?? true;
 
 
             // fixing LinkInfo

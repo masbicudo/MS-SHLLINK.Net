@@ -22,7 +22,9 @@ namespace ShellLink.Actuators.ExtraData
 
         protected override bool LoadData(RawExtraDataBlock edb, BinaryReader reader, IOptions options)
         {
-            edb.Data = reader.ReadBytes(edb.BlockSize);
+            if (edb.BlockSize >= 0x80000000u)
+                throw new NotImplementedException("Block sizes >= 0x80000000u are not implemented");
+            edb.Data = reader.ReadBytes((int)edb.BlockSize);
             return true;
         }
 
@@ -42,7 +44,7 @@ namespace ShellLink.Actuators.ExtraData
 
         protected override void RepairData(RawExtraDataBlock edb)
         {
-            edb.BlockSize = SizeAndSigFieldLength + edb.Data.Length;
+            edb.BlockSize = (uint)((uint)SizeAndSigFieldLength + edb.Data.Length);
         }
     }
 }

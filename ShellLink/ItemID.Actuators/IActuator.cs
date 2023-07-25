@@ -6,7 +6,7 @@ namespace ShellLink.ItemID.Actuators
     {
         bool Read(ReadParams<TItem> arguments);
         bool Write(WriteParams<TItem> arguments);
-        int GetLength(LengthParams<TItem> arguments);
+        uint GetLength(LengthParams<TItem> arguments);
         bool Check(CheckParams<TItem> arguments);
         bool Repair(RepairParams<TItem> arguments);
     }

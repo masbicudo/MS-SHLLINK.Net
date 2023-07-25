@@ -3,6 +3,7 @@ using ShellLink.DataObjects.Enums;
 using ShellLink.Internals;
 using System;
 using System.Collections.Generic;
+using FileAttributes = ShellLink.DataObjects.Enums.FileAttributes;
 
 namespace ShellLink.Validators
 {

@@ -42,6 +42,6 @@ namespace ShellLink.Actuators.ExtraData
                     fieldName));
         }
 
-        public abstract ExtraDataBlock Read(BinaryReader reader, int size, int sig, IOptions options);
+        public abstract ExtraDataBlock Read(BinaryReader reader, uint size, int sig, IOptions options);
     }
 }

@@ -40,5 +40,10 @@ namespace ShellLink.Actuators.ExtraData
             // - EnvironmentVariableDataBlock
             // - IconEnvironmentDataBlock
         }
+
+        public override ExtraDataBlock Read(BinaryReader reader, uint size, int sig, IOptions options)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

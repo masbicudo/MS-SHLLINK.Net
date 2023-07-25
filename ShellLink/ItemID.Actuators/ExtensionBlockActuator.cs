@@ -13,9 +13,9 @@ namespace ShellLink.ItemID.Actuators
         #endregion
 
         #region Length
-        public int GetLength(LengthParams<ExtensionBlock> arguments)
+        public uint GetLength(LengthParams<ExtensionBlock> arguments)
         {
-            return 64;
+            return 64u;
         }
         #endregion
 

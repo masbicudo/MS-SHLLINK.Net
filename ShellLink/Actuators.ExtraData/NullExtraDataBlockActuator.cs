@@ -34,5 +34,10 @@ namespace ShellLink.Actuators.ExtraData
         {
             throw NullExtraDataBlock.BlockDataError();
         }
+
+        public override ExtraDataBlock Read(BinaryReader reader, uint size, int sig, IOptions options)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

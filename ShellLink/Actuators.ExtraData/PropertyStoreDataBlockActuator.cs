@@ -35,5 +35,10 @@ namespace ShellLink.Actuators.ExtraData
         {
             // the error cannot be repaired easily
         }
+
+        public override ExtraDataBlock Read(BinaryReader reader, uint size, int sig, IOptions options)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

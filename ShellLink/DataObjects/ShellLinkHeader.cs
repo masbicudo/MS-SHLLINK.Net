@@ -1,6 +1,6 @@
 ﻿using ShellLink.DataObjects.Enums;
-using System;
 using System.ComponentModel;
+using FileAttributes = ShellLink.DataObjects.Enums.FileAttributes;
 
 namespace ShellLink.DataObjects
 {

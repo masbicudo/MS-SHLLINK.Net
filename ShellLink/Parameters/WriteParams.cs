@@ -9,6 +9,13 @@ namespace ShellLink.Parameters
         public BinaryWriter writer;
         public IOptions options;
 
+        public WriteParams(TItem item, BinaryWriter writer, IOptions options)
+        {
+            this.item = item;
+            this.writer = writer;
+            this.options = options;
+        }
+
         public WriteParams<TOtherItem> ConvertTo<TOtherItem>()
         {
             return new()

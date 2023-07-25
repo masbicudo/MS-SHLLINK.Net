@@ -69,7 +69,7 @@ namespace ShellLink.Internals
             };
         }
 
-        public IActuator<ShellItemId> GetActuatorFor(Type type)
+        public IActuator<ShellItemId> GetActuatorForShellItemId(Type type)
         {
             throw new NotImplementedException();
         }
